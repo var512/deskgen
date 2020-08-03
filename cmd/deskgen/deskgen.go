@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	"github.com/var512/deskgen/internal/desktop"
 	"github.com/var512/deskgen/internal/flags"
@@ -44,7 +45,7 @@ var (
 )
 
 func createEntry() *desktop.Entry {
-	e := desktop.NewEntry(
+	entry, err := desktop.NewEntry(
 		*typeKey,
 		*name,
 		desktop.Version(*version),
@@ -70,14 +71,20 @@ func createEntry() *desktop.Entry {
 		desktop.PrefersNonDefaultGPU(*prefersNonDefaultGPU),
 		desktop.Actions(actionName, actionIcon, actionExec),
 	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	return e
+	return entry
 }
 
 func createFile(path, name string, entry desktop.Entry) *desktop.File {
-	f := desktop.NewFile(path, name, entry)
+	file, err := desktop.NewFile(path, name, entry)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	return f
+	return file
 }
 
 func main() {
@@ -91,7 +98,10 @@ func main() {
 	f := createFile(*filePath, *fileName, *e)
 
 	if *fileName != "" {
-		f.Save()
+		err := f.Save()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	fmt.Println(string(f.Content))

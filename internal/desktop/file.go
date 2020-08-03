@@ -2,9 +2,9 @@ package desktop
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"text/template"
 )
@@ -18,7 +18,7 @@ type File struct {
 	Entry     Entry
 }
 
-func (f File) parseContent() []byte {
+func (f *File) parseContent() ([]byte, error) {
 	// TODO RTFD.
 	const desktopEntry = `
 {{- "[Desktop Entry]" -}}
@@ -107,36 +107,36 @@ Exec={{$v.Exec}}
 
 	tmpl, err := template.New("DesktopEntry").Parse(desktopEntry)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	err = tmpl.Execute(buf, f)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return buf.Bytes()
+	return buf.Bytes(), nil
 }
 
-func (f File) Save() {
+func (f *File) Save() error {
 	if _, err := os.Stat(f.FullPath); err == nil {
-		log.Fatalf("file already exists: %v", f.FullPath)
+		return fmt.Errorf("file already exists: %v: %w", f.FullPath, err)
 	}
 
 	if _, err := os.Stat(f.Path); os.IsNotExist(err) {
-		if err != nil {
-			log.Fatal(fmt.Errorf("path error: %w", err))
-		}
+		return fmt.Errorf("path error: %v: %w", f.Path, err)
 	}
 
 	err := ioutil.WriteFile(f.FullPath, f.Content, 0644)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
 
-func NewFile(path, name string, entry Entry) *File {
-	f := &File{
+func NewFile(path, name string, entry Entry) (*File, error) {
+	file := &File{
 		Path:  path,
 		Name:  name,
 		Entry: entry,
@@ -145,27 +145,32 @@ func NewFile(path, name string, entry Entry) *File {
 	// Set File.Extension.
 	switch entry.TypeKey {
 	case "Application":
-		f.Extension = "desktop"
+		file.Extension = "desktop"
 	case "Directory":
-		f.Extension = "directory"
+		file.Extension = "directory"
 	default:
-		log.Fatal("invalid type")
+		return nil, errors.New("invalid type")
 	}
 
 	// Set File.FullPath: use path or working directory.
-	if f.Path == "" {
+	if file.Path == "" {
 		wd, err := os.Getwd()
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 
-		f.Path = wd
+		file.Path = wd
 	}
 
-	f.FullPath = f.Path + "/" + f.Name + "." + f.Extension
+	file.FullPath = file.Path + "/" + file.Name + "." + file.Extension
 
 	// Set File.Content.
-	f.Content = f.parseContent()
+	content, err := file.parseContent()
+	if err != nil {
+		return nil, err
+	}
 
-	return f
+	file.Content = content
+
+	return file, nil
 }

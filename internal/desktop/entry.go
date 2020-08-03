@@ -1,7 +1,7 @@
 package desktop
 
 import (
-	"log"
+	"errors"
 
 	"github.com/var512/deskgen/internal/flags"
 )
@@ -188,13 +188,13 @@ func PrefersNonDefaultGPU(prefersNonDefaultGPU bool) Option {
 func Actions(name flags.ActionName, icon flags.ActionIcon, exec flags.ActionExec) Option {
 	return func(e *Entry) error {
 		if (len(name)+len(icon)+len(exec))%3 != 0 {
-			log.Fatal("all action fields are required: name, icon, exec")
+			return errors.New("all action fields are required: name, icon, exec")
 		}
 
 		for i := range name {
 			// Action spec requires a name.
 			if name[i] == "" {
-				log.Fatal("action name is required")
+				return errors.New("action name is required")
 			}
 
 			e.Actions = append(e.Actions, Action{
@@ -208,22 +208,22 @@ func Actions(name flags.ActionName, icon flags.ActionIcon, exec flags.ActionExec
 	}
 }
 
-func NewEntry(typeKey, name string, opts ...Option) *Entry {
-	e := &Entry{
+func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
+	entry := &Entry{
 		TypeKey: typeKey,
 		Name:    name,
 	}
 
 	for _, opt := range opts {
-		err := opt(e)
+		err := opt(entry)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 	}
 
-	if e.Version == "" {
-		e.Version = "1.0"
+	if entry.Version == "" {
+		entry.Version = "1.0"
 	}
 
-	return e
+	return entry, nil
 }
