@@ -96,10 +96,14 @@ PrefersNonDefaultGPU={{ .Entry.PrefersNonDefaultGPU }}
 Actions={{ range $v := .Entry.Actions }}{{ $v.Name }};{{ end }}
 {{- range $v := .Entry.Actions }}
 
-[Desktop Action {{$v.Name}}]
-Name={{$v.Name}}
-Icon={{$v.Icon}}
-Exec={{$v.Exec}}
+[Desktop Action {{ $v.Name }}]
+Name={{ $v.Name -}}
+{{ if $v.Icon }}
+Icon={{ $v.Icon }}
+{{- end -}}
+{{ if $v.Exec }}
+Exec={{ $v.Exec }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- "" }}
