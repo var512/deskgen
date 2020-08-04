@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 	"text/template"
+
+	"github.com/var512/deskgen/internal/flags"
 )
 
 type File struct {
@@ -19,7 +21,6 @@ type File struct {
 }
 
 func (f *File) parseContent() ([]byte, error) {
-	// TODO RTFD.
 	const desktopEntry = `
 {{- "[Desktop Entry]" -}}
 {{ if .Entry.TypeKey }}
@@ -34,7 +35,7 @@ Name={{ .Entry.Name }}
 {{ if .Entry.GenericName }}
 GenericName={{ .Entry.GenericName }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "noDisplay" }}
 NoDisplay={{ .Entry.NoDisplay }}
 {{- end -}}
 {{ if .Entry.Comment }}
@@ -43,7 +44,7 @@ Comment={{ .Entry.Comment }}
 {{ if .Entry.Icon }}
 Icon={{ .Entry.Icon }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "hidden" }}
 Hidden={{ .Entry.Hidden }}
 {{- end -}}
 {{ if .Entry.OnlyShowIn }}
@@ -52,7 +53,7 @@ OnlyShowIn={{ .Entry.OnlyShowIn }}
 {{ if .Entry.NotShowIn }}
 NotShowIn={{ .Entry.NotShowIn }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "dbusActivatable" }}
 DbusActivatable={{ .Entry.DbusActivatable }}
 {{- end -}}
 {{ if .Entry.TryExec }}
@@ -64,7 +65,7 @@ Exec={{ .Entry.Exec }}
 {{ if .Entry.Path }}
 Path={{ .Entry.Path }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "terminal" }}
 Terminal={{ .Entry.Terminal }}
 {{- end -}}
 {{ if .Entry.MimeType }}
@@ -79,7 +80,7 @@ Implements={{ .Entry.Implements }}
 {{ if .Entry.Keywords }}
 Keywords={{ .Entry.Keywords }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "startupNotify" }}
 StartupNotify={{ .Entry.StartupNotify }}
 {{- end -}}
 {{ if .Entry.StartupWMClass }}
@@ -88,7 +89,7 @@ StartupWMClass={{ .Entry.StartupWMClass }}
 {{ if .Entry.URL }}
 URL={{ .Entry.URL }}
 {{- end -}}
-{{ if true }}
+{{ if flagIsSet "prefersNonDefaultGPU" }}
 PrefersNonDefaultGPU={{ .Entry.PrefersNonDefaultGPU }}
 {{- end -}}
 {{ if .Entry.Actions }}
@@ -105,7 +106,7 @@ Exec={{$v.Exec}}
 `
 	buf := &bytes.Buffer{}
 
-	tmpl, err := template.New("DesktopEntry").Parse(desktopEntry)
+	tmpl, err := template.New("DesktopEntry").Funcs(template.FuncMap{"flagIsSet": flags.IsSet}).Parse(desktopEntry)
 	if err != nil {
 		return nil, err
 	}
