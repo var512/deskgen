@@ -95,15 +95,15 @@ func main() {
 
 	flag.Parse()
 
-	e := createEntry()
-	f := createFile(*filePath, *fileName, *e)
+	entry := createEntry()
+	file := createFile(*filePath, *fileName, *entry)
 
 	if *fileName != "" {
-		err := f.Save()
+		err := file.Save()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	fmt.Println(string(f.Content))
+	fmt.Println(string(file.Content))
 }
