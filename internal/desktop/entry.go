@@ -33,6 +33,8 @@ type Entry struct {
 	Actions              []Action
 }
 
+const defaultVersion = "1.0"
+
 // TODO validation.
 // Functional options.
 type Option func(*Entry) error
@@ -222,7 +224,7 @@ func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
 	}
 
 	if entry.Version == "" {
-		entry.Version = "1.0"
+		entry.Version = defaultVersion
 	}
 
 	return entry, nil
