@@ -9,15 +9,21 @@ This is my first Go project. Only what I currently need from the specification w
 - https://github.com/rkoesters/xdg
 - https://github.com/xyproto/gendesk
 
-### Install
+### Installation
 
 ```sh
-go get github.com/var512/deskgen/cmd/deskgen
+go get -u github.com/var512/deskgen/cmd/deskgen
 ```
 
 ### Usage
 
-**stdout**
+**Options**
+
+```sh
+${GOPATH}/bin/deskgen --help
+```
+
+**Stdout**
 
 ```sh
 ${GOPATH}/bin/deskgen \
@@ -55,18 +61,18 @@ ${GOPATH}/bin/deskgen \
 
 **Actions**
 
-Very basic functionality. Each action requires all fields to be set.
+Very basic functionality. Each action requires all fields to be set (name, icon, exec).
 
 ```sh
 ${GOPATH}/bin/deskgen \
     --type="Application" \
     --name="My script" \
-    --actionName="Nothing but DBusActivatable" \
+    --actionName="Example 1" \
     --actionIcon="" \
     --actionExec="" \
-    --actionName="New Window" \
-    --actionIcon="" \
-    --actionExec="/bin/example --new-window" \
+    --actionName="Example 2" \
+    --actionIcon="arrow-right" \
+    --actionExec="" \
     --actionName="New Private Window" \
     --actionIcon="icon-private" \
     --actionExec='/bin/example --new-private-window --with="double-quotes" %u'
