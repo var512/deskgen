@@ -45,7 +45,7 @@ var (
 	actionExec flags.ActionExec
 )
 
-func createEntry() *desktop.Entry {
+func newEntry() *desktop.Entry {
 	entry, err := desktop.NewEntry(
 		*typeKey,
 		*name,
@@ -79,7 +79,7 @@ func createEntry() *desktop.Entry {
 	return entry
 }
 
-func createFile(path, name string, entry desktop.Entry) *desktop.File {
+func newFile(path, name string, entry desktop.Entry) *desktop.File {
 	file, err := desktop.NewFile(path, name, entry)
 	if err != nil {
 		log.Fatal(err)
@@ -95,8 +95,8 @@ func main() {
 
 	flag.Parse()
 
-	entry := createEntry()
-	file := createFile(*filePath, *fileName, *entry)
+	entry := newEntry()
+	file := newFile(*filePath, *fileName, *entry)
 
 	if *fileName != "" {
 		err := file.Save()
