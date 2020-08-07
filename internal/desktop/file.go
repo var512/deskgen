@@ -2,7 +2,6 @@ package desktop
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -148,14 +147,7 @@ func NewFile(path, name string, entry Entry) (*File, error) {
 	}
 
 	// Set File.Extension.
-	switch entry.TypeKey {
-	case "Application":
-		file.Extension = "desktop"
-	case "Directory":
-		file.Extension = "directory"
-	default:
-		return nil, errors.New("invalid type")
-	}
+	file.Extension = typeExtension[entry.TypeKey]
 
 	// Set File.FullPath: use path or working directory.
 	if file.Path == "" {

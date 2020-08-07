@@ -2,6 +2,7 @@ package desktop
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/var512/deskgen/internal/flags"
 )
@@ -34,6 +35,12 @@ type Entry struct {
 }
 
 const defaultVersion = "1.0"
+
+// Valid Entry.typeKey and their respective File.Extension
+var typeExtension = map[string]string{
+	"Application": "desktop",
+	"Directory":   "directory",
+}
 
 // TODO validation.
 // Functional options.
@@ -211,6 +218,10 @@ func Actions(name flags.ActionName, icon flags.ActionIcon, exec flags.ActionExec
 }
 
 func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
+	if _, ok := typeExtension[typeKey]; !ok {
+		return nil, fmt.Errorf("invalid entry Type: %v", typeKey)
+	}
+
 	entry := &Entry{
 		TypeKey: typeKey,
 		Name:    name,
