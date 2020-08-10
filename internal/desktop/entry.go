@@ -220,6 +220,10 @@ func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
 		return nil, fmt.Errorf("invalid entry Type: %v", typeKey)
 	}
 
+	if name == "" {
+		return nil, errors.New("desktop entry name is required")
+	}
+
 	entry := &Entry{
 		TypeKey: typeKey,
 		Name:    name,
