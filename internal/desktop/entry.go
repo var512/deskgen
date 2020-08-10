@@ -34,8 +34,6 @@ type Entry struct {
 	Actions              []Action
 }
 
-const defaultVersion = "1.0"
-
 // Valid Entry.typeKey and their respective File.Extension
 var typeExtension = map[string]string{
 	"Application": "desktop",
@@ -232,10 +230,6 @@ func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	if entry.Version == "" {
-		entry.Version = defaultVersion
 	}
 
 	return entry, nil
