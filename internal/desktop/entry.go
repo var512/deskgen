@@ -195,13 +195,13 @@ func PrefersNonDefaultGPU(prefersNonDefaultGPU bool) Option {
 func Actions(name flags.ActionName, icon flags.ActionIcon, exec flags.ActionExec) Option {
 	return func(e *Entry) error {
 		if (len(name)+len(icon)+len(exec))%3 != 0 {
-			return errors.New("all action fields are required: name, icon, exec")
+			return errors.New("all desktop action values are required: name, icon, exec")
 		}
 
 		for i := range name {
 			// Action spec requires a name.
 			if name[i] == "" {
-				return errors.New("action name is required")
+				return errors.New("desktop action name is required")
 			}
 
 			e.Actions = append(e.Actions, Action{
@@ -217,7 +217,7 @@ func Actions(name flags.ActionName, icon flags.ActionIcon, exec flags.ActionExec
 
 func NewEntry(typeKey, name string, opts ...Option) (*Entry, error) {
 	if _, ok := typeExtension[typeKey]; !ok {
-		return nil, fmt.Errorf("invalid entry Type: %v", typeKey)
+		return nil, fmt.Errorf("invalid desktop entry type: %v", typeKey)
 	}
 
 	if name == "" {

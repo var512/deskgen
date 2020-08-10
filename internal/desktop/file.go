@@ -128,7 +128,7 @@ func (f *File) Save() error {
 	}
 
 	if _, err := os.Stat(f.Path); os.IsNotExist(err) {
-		return fmt.Errorf("path error: %v: %w", f.Path, err)
+		return fmt.Errorf("file path error: %v: %w", f.Path, err)
 	}
 
 	err := ioutil.WriteFile(f.FullPath, f.Content, 0644)
