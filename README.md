@@ -1,6 +1,6 @@
 # deskgen
  
-Generate .desktop files following the [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html).
+Generate `.desktop` and `.directory` files following the [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html).
 
 This is my first Go project. Only what I currently need from the specification was implemented. Use at your own risk.
 
@@ -61,7 +61,7 @@ ${GOPATH}/bin/deskgen \
 
 **Actions**
 
-Very basic functionality. Each action requires all fields to be set (name, icon, exec).
+Very basic functionality. Each action requires all values to be set (name, icon, exec).
 
 ```sh
 ${GOPATH}/bin/deskgen \
