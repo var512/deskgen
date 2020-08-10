@@ -123,15 +123,19 @@ Exec={{ $v.Exec }}
 }
 
 func (f *File) Save() error {
-	if _, err := os.Stat(f.FullPath); err == nil {
+	var err error
+
+	_, err = os.Stat(f.FullPath)
+	if err == nil {
 		return fmt.Errorf("file already exists: %v: %w", f.FullPath, err)
 	}
 
-	if _, err := os.Stat(f.Path); os.IsNotExist(err) {
+	_, err = os.Stat(f.Path)
+	if os.IsNotExist(err) {
 		return fmt.Errorf("file path error: %v: %w", f.Path, err)
 	}
 
-	err := ioutil.WriteFile(f.FullPath, f.Content, 0644)
+	err = ioutil.WriteFile(f.FullPath, f.Content, 0644)
 	if err != nil {
 		return err
 	}
