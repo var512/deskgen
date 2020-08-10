@@ -44,7 +44,6 @@ func TypeExtension() map[string]string {
 	return typeExtension
 }
 
-// TODO validation.
 // Functional options.
 type Option func(*Entry) error
 
