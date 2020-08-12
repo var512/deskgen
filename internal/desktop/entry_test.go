@@ -10,7 +10,7 @@ const (
 )
 
 func TestTypeAndName(t *testing.T) {
-	typeKeyTests := []struct {
+	tests := []struct {
 		typeKey string
 		name    string
 		wantErr bool
@@ -34,7 +34,7 @@ func TestTypeAndName(t *testing.T) {
 		{typeKey: "Directory", name: validName, wantErr: false},
 	}
 
-	for _, tt := range typeKeyTests {
+	for _, tt := range tests {
 		t.Run("Type "+tt.typeKey+" Name "+tt.name, func(t *testing.T) {
 			_, err := NewEntry(tt.typeKey, tt.name)
 
