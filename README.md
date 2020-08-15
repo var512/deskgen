@@ -2,6 +2,8 @@
  
 Generate `.desktop` and `.directory` files following the [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html).
 
+![Go](https://github.com/var512/deskgen/workflows/Go/badge.svg)
+
 This is my first Go project. Only what I currently need from the specification was implemented. Use at your own risk.
 
 **Related projects**
